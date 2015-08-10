@@ -13,3 +13,15 @@
     3.10 $mysql -u root -p -e "CREATE USER 'loja'@'localhost'"
     3.11 $mysql -u root -p -e "GRANT ALL PRIVILEGES ON loja_schema.* TO 'loja'@'localhost'"
     3.12 mysql -u loja -p loja_schema -e "select database(), user()"
+
+4. vagrant ssh web
+    4.1 $sudo apt-get update
+    4.2 $sudo apt-get install tomcat7 mysql-client
+    4.3 Acesse 192.168.33.12:8080
+    4.4 Configurar certificado SSL: #cd /var/lib/tomcat7/conf
+    4.5 $sudo keytool -genkey -alias tomcat -keyalg RSA -keystore .keystore
+    4.6 $sudo apt-get install vim
+    4.7 Copy tomcat.xml to /var/lib/tomcat7/conf/server.xml
+    4.8 Copy tomcat7 to /etc/default/tomcat7
+    4.9 $sudo service tomcat7 restart
+    4.10 Acesse https://192.168.33.12:8443
