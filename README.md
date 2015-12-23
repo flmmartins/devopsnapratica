@@ -100,6 +100,55 @@ Veja o log do deploy
 	
 Acesse a aplicação http://192.168.33.12:8080/devopsnapratica/ e a página de admin http://192.168.33.12:8080/devopsnapratica/admin/
 
+### Configurando servidor MONITOR manualmente
+
+Atualize a base de dados para obter versões mais atualizadas do Nagios:
+
+	$ echo "Package: nagios* > PIN: release n=raring > Pin-priority: 990" | sudo tee /etc/apt/preferences.d/nagios
+	$ echo "deb http://archive.ubuntu.com/ubuntu > raring main" | sudo tee /etc/apt/sources.list.d/raring.list
+	$ sudo apt-get update
+	
+Instale o nagios
+
+	$ sudo apt-get install nagios3 
+
+Ele vai instalar o POSTFIX, um serviço de e-mail para isso vai pedir para que você selecione algumas opções. Neste momento, escolha *Internet Site* e depois *monitor.lojavirtualdevops.com.br*
+
+Tente acessar o servidor com *http://nagiosadmin:<password>@192.168.33.14/nagios3* com o usuário nagiosadmin e sua senha.
+
+Configure o monitoramento do servidor web e do banco de dados copiando a configuração:
+
+	$ sudo cp /vagrant/loja_virtual.cfg /etc/nagios3/conf.d
+	
+	$ sudo service nagios3 reload
+
+Com esse arquivo criamos um hostgroup chamado DB-SERVERS e WEB-SERVERS e adicionamos nossos servidores. Também adicionamos a eles o hostgroup SSH (checagens do serviço) e o Debian (coloca o logotipo e identifica nossos servidores).
+
+Tem como checar os serviços de forma manual através da execução de scripts. Em */usr/lib/nagios/plugins*:
+
+	$ ./check_ssh 192.168.33.12 - SSH OK - OpenSSH_5.9p1 Debian-5ubuntu1 (protocol 2.0)*
+	
+	$ ./check_ssh 192.168.33.11 - No route to host
+	
+Também existem outros scripts que podem ser executados:
+
+	$ ./check_http -H 192.168.33.12 -p 8080
+	
+	$ ./check_disk -H 192.168.33.12 -w 10% -c 5%
+	
+Podemos extender esses comands ao criar diretivas no arquivo cfg.
+
+**Alarmes**
+
+O nagios pode disparar alarmes caso alguma checagem falhe. Esses alarmes podem ser por e-mail como observado em  */etc/nagios3/commands.cfg*. Também podemos definir a perioticidade dos alarmes em */etc/nagios3/conf.d/timeperiods_nagios2.cfg* e os contatos que irão receber notificações em */etc/nagios3/conf.d/contacts_nagios2.cfg*. Vamos editar informações de contato para que você receba um e-mail. Vá no último arquivo e troque *root@localhost* pelo seu endereço de e-mail.
+
+
+Pode-se observar no menu de serviços que todos os monitoramentos estão OK. Vamos agora destruir o servidor de banco de dados e dar início a automação da infraestrutura:
+
+	$ vagrant destroy db
+
+
+
 
 
 
