@@ -168,3 +168,17 @@ Se executar *sudo puppet apply db.pp* o pacote mysql-server vai ser instalado. O
 Vai mostrar os detalhes da diretiva package, bem como seus providers (yum, apt e etc). 
 
 Agora vamos colocar o puppet no Vagrant. Crie um diretório manifests no mesmo lugar aonde está seu Vagrantfile. Vamos editar o arquivo para colocar o arquivo */etc/mysql/conf.d/allow_external.cnf*. O puppet só altera o arquivo se ele for modificado de acordo com o MD5.
+
+### Usando templates
+
+Ao invés de adicionarmos uma linha a um arquivo podemos usar um template que é copiado para a máquina que está sendo provisionada.
+
+Também adicionamos uma diretiva **Service** que faz com que o serviço enteja sempre rodando (**ensure**), que esteja habilitado ao iniciar a máquina (**enable**), que consiga entender o comando restart e status do próprio service (**hasstatus, hasrestart**). Ele também tem uma dependência com o pacote do mysql como mostrado com a diretiva **require**.
+
+A diretiva **notify** faz com que toda vez que o arquivo seja alterado, o serviço reinicie.
+
+A diretiva **unless** especifica que, caso o comando seja executado com sucesso, o comando principal ***não*** irá executar.
+
+A diretiva **onlyif** especifica que, caso o comando seja executado com sucesso, o comando principal ***irá*** executar.
+
+Ambos os comandos **onlyif e unless** garantem a idempotência da diretiva **command**
