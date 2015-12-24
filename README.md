@@ -152,9 +152,12 @@ Pode-se observar no menu de serviços que todos os monitoramentos estão OK. Vam
 # Criando máquinas automaticamente
 
 
+## Banco de Dados
+
+
 Deploy se refere a instalação e configuração de aplicação. Diferente de shell script, ferramentas de deploy automatizado possuem **idenpotência**. Não importa quanto vezes forem executados, eles só mudarão o necessário. Você declara o estado final do seu sistema e a ferramenta buscará esse estado.
 
-**Puppet básico**
+### Puppet básico
 
 Puppet utiliza um conjunto de instruções chamado *manifesto*. Vamos criar a máquina db com Puppet.
 
@@ -182,3 +185,9 @@ A diretiva **unless** especifica que, caso o comando seja executado com sucesso,
 A diretiva **onlyif** especifica que, caso o comando seja executado com sucesso, o comando principal ***irá*** executar.
 
 Ambos os comandos **onlyif e unless** garantem a idempotência da diretiva **command**
+
+## Web
+
+
+Vamos criar uma máquina web2 e fazer o deploy nela primeiramente. Adicionamos umas linhas no Vagrant file e o arquivo web.pp. Ele vai instalar os pacotes e copiar alguns arquivos do tomcat7 necessários.
+
