@@ -2,13 +2,13 @@
 
 Esse README contém um compilado do livro com correções. Esse repositório não é suficiente para entender o conteúdo do livro.
 
-### Criando máquinas
+# Criando máquinas manualmente
 
 $vagrant box add hashicorp/precise32
 
 Build Vagrantfile and $vagrant up
 
-### Configurando DB manualmente
+### Configurando DB
 
 vagrant ssh db
 
@@ -41,7 +41,7 @@ Cria conta para manipulação do banco
     $mysql -u loja -p loja_schema -e "select database(), user()"
     
 
-### Configurando servidor WEB manualmente
+### Configurando servidor WEB
 
 vagrant ssh web
     
@@ -67,7 +67,7 @@ Reinicie o Tomcat 7
 
 Acesse https://192.168.33.12:8443 e veja se está tudo funcionando
 
-### Fazendo build e deploy manualmente
+### Fazendo build e deploy
 
 Na mesma máquina do Web.
 
@@ -100,7 +100,7 @@ Veja o log do deploy
 	
 Acesse a aplicação http://192.168.33.12:8080/devopsnapratica/ e a página de admin http://192.168.33.12:8080/devopsnapratica/admin/
 
-### Configurando servidor MONITOR manualmente
+### Configurando servidor de monitoração
 
 Atualize a base de dados para obter versões mais atualizadas do Nagios:
 
@@ -149,8 +149,22 @@ Pode-se observar no menu de serviços que todos os monitoramentos estão OK. Vam
 
 
 
+# Criando máquinas automaticamente
 
 
+Deploy se refere a instalação e configuração de aplicação. Diferente de shell script, ferramentas de deploy automatizado possuem **idenpotência**. Não importa quanto vezes forem executados, eles só mudarão o necessário. Você declara o estado final do seu sistema e a ferramenta buscará esse estado.
 
+**Puppet básico**
 
+Puppet utiliza um conjunto de instruções chamado *manifesto*. Vamos criar a máquina db com Puppet.
 
+	$ vagrant up db
+	$ vagrant ssh db
+	
+Se executar *sudo puppet apply db.pp* o pacote mysql-server vai ser instalado. O pacote é instalado de acordo com o provider indicado. Se executar:
+
+	$ sudo puppet describe package
+	
+Vai mostrar os detalhes da diretiva package, bem como seus providers (yum, apt e etc). 
+
+Agora vamos colocar o puppet no Vagrant. Crie um diretório manifests no mesmo lugar aonde está seu Vagrantfile. Vamos editar o arquivo para colocar o arquivo */etc/mysql/conf.d/allow_external.cnf*. O puppet só altera o arquivo se ele for modificado de acordo com o MD5.
