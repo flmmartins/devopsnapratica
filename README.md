@@ -186,8 +186,14 @@ A diretiva **onlyif** especifica que, caso o comando seja executado com sucesso,
 
 Ambos os comandos **onlyif e unless** garantem a idempotência da diretiva **command**
 
+
 ## Web
 
 
 Vamos criar uma máquina web2 e fazer o deploy nela primeiramente. Adicionamos umas linhas no Vagrant file e o arquivo web.pp. Ele vai instalar os pacotes e copiar alguns arquivos do tomcat7 necessários.
 
+Variáveis no puppet são declaradas com cifrão:  **$variavel**
+
+Você pode declarar variáveis e atribuir um valor a elas no manifesto. Elas podem ser colocadas em um arquivo template ERB e quando o puppet processar, vai substituir a variável no arquivo pelo valor declarado no manifesto. Você deve colocá-las no arquivo da seguinte forma: *<%= var %>*
+
+Não esqueça de colocar a função **template** no arquivo ao qual vc quer carregar as variáveis.
