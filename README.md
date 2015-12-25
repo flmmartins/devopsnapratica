@@ -189,6 +189,7 @@ Ambos os comandos **onlyif e unless** garantem a idempotência da diretiva **com
 
 ## Web
 
+### Usando templates com variáveis
 
 Vamos criar uma máquina web2 e fazer o deploy nela primeiramente. Adicionamos umas linhas no Vagrant file e o arquivo web.pp. Ele vai instalar os pacotes e copiar alguns arquivos do tomcat7 necessários.
 
@@ -197,3 +198,21 @@ Variáveis no puppet são declaradas com cifrão:  **$variavel**
 Você pode declarar variáveis e atribuir um valor a elas no manifesto. Elas podem ser colocadas em um arquivo template ERB e quando o puppet processar, vai substituir a variável no arquivo pelo valor declarado no manifesto. Você deve colocá-las no arquivo da seguinte forma: *<%= var %>*
 
 Não esqueça de colocar a função **template** no arquivo ao qual vc quer carregar as variáveis.
+
+# Refatorando código Puppet
+
+### Usando classes
+
+Classes, no Puppet, são um conjunto de recursos. Não é o mesmo que classes em programação.
+
+Para declarar classe use:
+
+**class <nome> {}**
+
+Dentro de uma classe devemos ter recursos que são executados somente uma vez e não podem ser reaproveitados.
+
+Para usar a classe vc deve utilizar:
+
+**include <nome da classe>** ou **class ( "nome da classe>": ... )**
+
+
