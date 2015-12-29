@@ -215,4 +215,17 @@ Para usar a classe vc deve utilizar:
 
 **include <nome da classe>** ou **class ( "nome da classe>": ... )**
 
+### Usando tipos definidos
 
+Tipos definidos é uma coleção de recursos que pode ser usada várias vezes em um mesmo manifesto. Ele evita duplicação de código e pode ser parametrizado.
+
+**define <nome do tipo> ($var1, $var2 = $title, $var4...) {}**
+
+
+Perceba que *title* é o título. Chamamos o tipo definido da seguinte forma....
+
+	$nome-do-tipo { "<título da instância>":
+  		var2   => "loja_schema",
+  		var4 => "lojasecret",
+	}
+	

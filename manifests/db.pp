@@ -36,20 +36,29 @@ class mysql-server {
   }
 }
 
-include mysql-server
+define mysql-db($schema, $user = $title, $password) {
+  #Dependência
+  Class['mysql-server'] -> Mysql-db[$title]
 
-exec {"loja-schema":
-  unless  => "mysql -uroot loja_schema",
-  command => "mysqladmin -uroot create loja_schema",
-  path  => "/usr/bin/",
-  require => Class["mysql-server"],
+  exec { "$title-schema":
+    unless  => "mysql -uroot $schema",
+    command => "mysqladmin -uroot create $schema",
+    path  => "/usr/bin/",
+  }
+
+  exec {"$title-user":
+    unless  => "mysql -u$user -p$password $schema",
+    command => "mysql -uroot -e \"GRANT ALL PRIVILEGES ON \
+                                  $schema.* TO '$user'@'%' \
+                                  IDENTIFIED BY '$password';\"",
+    path    => "/usr/bin/",
+    require => Exec["$title-schema"],
+  }
 }
 
-exec {"loja-user":
-  unless  => "mysql -uloja -plojasecret loja_schema",
-  command => "mysql -uroot -e \"GRANT ALL PRIVILEGES ON \
-                                loja_schema.* TO 'loja'@'%' \
-                                IDENTIFIED BY 'lojasecret';\"",
-  path    => "/usr/bin/",
-  require => Exec["loja-schema"],
+include msql-server
+
+msql-db { "loja":
+  schema   => "loja_schema",
+  password => "lojasecret",
 }
