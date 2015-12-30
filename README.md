@@ -114,7 +114,7 @@ Instale o nagios
 
 Ele vai instalar o POSTFIX, um serviço de e-mail para isso vai pedir para que você selecione algumas opções. Neste momento, escolha *Internet Site* e depois *monitor.lojavirtualdevops.com.br*
 
-Tente acessar o servidor com *http://nagiosadmin:<password>@192.168.33.14/nagios3* com o usuário nagiosadmin e sua senha.
+Tente acessar o servidor com *http://nagiosadmin:\<password>@192.168.33.14/nagios3* com o usuário nagiosadmin e sua senha.
 
 Configure o monitoramento do servidor web e do banco de dados copiando a configuração:
 
@@ -195,7 +195,7 @@ Vamos criar uma máquina web2 e fazer o deploy nela primeiramente. Adicionamos u
 
 Variáveis no puppet são declaradas com cifrão:  **$variavel**
 
-Você pode declarar variáveis e atribuir um valor a elas no manifesto. Elas podem ser colocadas em um arquivo template ERB e quando o puppet processar, vai substituir a variável no arquivo pelo valor declarado no manifesto. Você deve colocá-las no arquivo da seguinte forma: *<%= var %>*
+Você pode declarar variáveis e atribuir um valor a elas no manifesto. Elas podem ser colocadas em um arquivo template ERB e quando o puppet processar, vai substituir a variável no arquivo pelo valor declarado no manifesto. Você deve colocá-las no arquivo da seguinte forma: *\<%= var %>*
 
 Não esqueça de colocar a função **template** no arquivo ao qual vc quer carregar as variáveis.
 
@@ -207,19 +207,19 @@ Classes, no Puppet, são um conjunto de recursos. Não é o mesmo que classes em
 
 Para declarar classe use:
 
-**class <nome> {}**
+**class \<nome> {}**
 
 Dentro de uma classe devemos ter recursos que são executados somente uma vez e não podem ser reaproveitados.
 
 Para usar a classe vc deve utilizar:
 
-**include <nome da classe>** ou **class ( "nome da classe>": ... )**
+**include \<nome da classe>** ou **class ( "nome da classe>": ... )**
 
 ### Usando tipos definidos
 
 Tipos definidos é uma coleção de recursos que pode ser usada várias vezes em um mesmo manifesto. Ele evita duplicação de código e pode ser parametrizado.
 
-**define <nome do tipo> ($var1, $var2 = $title, $var4...) {}**
+**define \<nome do tipo> ($var1, $var2 = $title, $var4...) {}**
 
 
 Perceba que *title* é o título. Chamamos o tipo definido da seguinte forma....
@@ -229,3 +229,39 @@ Perceba que *title* é o título. Chamamos o tipo definido da seguinte forma....
   		var4 => "lojasecret",
 	}
 	
+### Módulos
+
+Você pode organizar seu código puppet em módulos. Módulos possuem uma estrutura predefinida de diretórios e nomenclaturas. Módulos são compartilhados pela comunidade em *http://forge.puppetlabs.com*. A estrutura é:
+
+	$<nome do módulo>/
+		files
+			...
+		manifests
+			init.pp
+		templates
+			...
+		tests
+			init.pp
+			
+Você deve colocar seus manifestos dentro da pasta *manifests*. O arquivo *init.pp* serve como ponto de entrada para o módulo.
+
+O diretório *files* possuem arquivos de configuração estáticos e você pode acessá-los pela seguinte URL *puppet:///modules/\<nome do módulo>/\<arquivo>*.
+
+O diretório *templates* contém arquivos que podem ser utilizados dentro do manifesto da seguinte forma: *template('\<nome do módulo>/\<arquivo ERB>')*. Agora você não precisa mais referenciar o arquivo pelo caminho absoluto.
+
+O diretório *tests* contém exemplos mostrando como utilizar as classes e tipos definidos pelo módulo. **Esses testes não fazem nenhum tipo de verificação automatizada.** Você roda os testes com *puppet apply --noop* e elas fazem simulações em cima do seu código.
+
+No arquivo init.pp do manifests precisamos declarar uma classe como namespace:
+
+	$ class <nome> {}
+	
+Exemplo:
+
+	$ class mysql {}
+	
+Agora vamos referenciar o namespace quando declaramos as classes em outros manifestos como por exemplo no arquivo *server.pp*:
+
+	$ class mysql::server {...}
+
+
+
