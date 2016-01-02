@@ -17,10 +17,3 @@ define mysql::db($schema, $user = $title, $password) {
     require => Exec["$title-schema"],
   }
 }
-
-include msql::server
-
-msql::db { "loja":
-  schema   => "loja_schema",
-  password => "lojasecret",
-}

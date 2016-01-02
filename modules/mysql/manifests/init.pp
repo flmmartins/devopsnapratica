@@ -1,2 +1,2 @@
 #Namespace
-class mysql {}
+class mysql { }
