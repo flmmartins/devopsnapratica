@@ -6,6 +6,7 @@ Vagrant.configure(2) do |config|
     db_config.vm.provision "puppet" do |puppet|
         puppet.module_path = "modules"
         puppet.manifest_file = "db.pp"
+        puppet.options = "--verbose --debug"
     end
   end
 
@@ -15,6 +16,7 @@ Vagrant.configure(2) do |config|
     web_config.vm.provision "puppet" do |puppet|
         puppet.module_path = "modules"
         puppet.manifest_file = "web.pp"
+        puppet.options = "--verbose --debug"
     end
   end
 
