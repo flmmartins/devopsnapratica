@@ -1,6 +1,6 @@
 define mysql::db($schema, $user = $title, $password) {
   #Dependência
-  Class['mysql::server'] -> Mysql::db[$title]
+  Class['mysql::server'] -> Mysql::Db[$title]
 
   exec { "$title-schema":
     unless  => "mysql -uroot $schema",

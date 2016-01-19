@@ -1,6 +1,6 @@
 include mysql::server
 
-msql::db { "loja":
+mysql::db { "loja":
   schema   => "loja_schema",
   password => "lojasecret",
 }
